@@ -54,10 +54,11 @@ jobs:
           - distro: "fedora_latest"
             arch: "aarch64"
             packaging: "rpm"
+            file: dist/func-e_dev_linux_aarch64.rpm
           - distro: "ubuntu20.04"
             arch: "aarch64"
+            packaging: "deb"
             file: dist/func-e_dev_linux_arm64.deb
-
     steps:
       - uses: actions/checkout@v2
       - uses: actions/download-artifact@v2
@@ -73,7 +74,7 @@ jobs:
           env: |
             ARCH: ${{ matrix.arch }}
             PACKAGING: ${{ matrix.packaging }}
-            PKG_FILE: ${{ matrix.file }}
+            FILE: ${{ matrix.file }}
           dockerRunArgs: |
             --volume "${PWD}:/src" -w /src
           run: ./verify.sh
