@@ -20,7 +20,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - run: |
+      - name: "install .${{ matrix.packaging }} on ${{ matrix.image }}/${{ matrix.arch }}"
+        run: |
           docker run -e ARCH=${{ matrix.arch }} \
             -e PACKAGING=${{ matrix.packaging }} \
             -v ${{ github.workspace }}:/src \
@@ -35,12 +36,13 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - arch: "aarch64"
-            distro: "fedora_latest"
+          - distro: "fedora_latest"
+            arch: "aarch64"
             packaging: "rpm"
     steps:
       - uses: actions/checkout@v2
-      - uses: uraimo/run-on-arch-action@v2.0.5
+      - name: "install .${{ matrix.packaging }} on ${{ matrix.distro }}/${{ matrix.arch }}"
+        uses: uraimo/run-on-arch-action@v2.0.5
         with:
           arch: ${{ matrix.arch }}
           distro: ${{ matrix.distro }}
