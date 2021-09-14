@@ -8,7 +8,7 @@ jobs:
     name: "test"
     runs-on: "ubuntu-latest"
     steps:
-      - uses: docker://continuumio/anaconda3:2019.07
+      - uses: docker://ghcr.io/tetratelabs/func-e-internal:centos8
       - name: "ok"
-        run: echo "haha"
+        run: uname -a
 
