@@ -19,8 +19,4 @@ jobs:
           - image: "arm64v8/fedora:latest"
             platform: "linux/arm64"
     steps:
-      - uses: addnab/docker-run-action@v3
-        with:
-          image: ${{ matrix.image }}
-          options: -v ${{ github.workspace }} --platform ${{ matrix.platform }}
-          run: pwd
+      - run: docker run ${{ matrix.image }} ls
