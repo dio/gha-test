@@ -8,6 +8,7 @@ jobs:
     name: "test"
     runs-on: "ubuntu-latest"
     steps:
+      - uses: docker://continuumio/anaconda3:2019.07
       - name: "ok"
         run: echo "haha"
 
