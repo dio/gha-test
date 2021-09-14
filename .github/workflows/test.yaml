@@ -12,11 +12,21 @@ jobs:
       matrix:
         include:
           - image: "ubuntu:latest"
-            platform: "linux/amd64"
+            arch: amd64
+            packaging: deb
           - image: "ghcr.io/tetratelabs/func-e-internal:centos8"
-            platform: "linux/amd64"
+            arch: rpm
+            packaging: rpm
+
     steps:
-      - run: docker run ${{ matrix.image }} ls
+      - uses: actions/checkout@v2
+      - run: |
+          docker run \
+            -e ARCH=${{ matrix.arch }} \
+            -e PACKAGING=${{ matrix.packaging }} \
+            -v ${{ github.workspace }}:/src
+            -w /src
+            ./verify.sh
 
   linux-non-amd64:
     runs-on: "ubuntu-latest"
@@ -27,10 +37,17 @@ jobs:
         include:
           - arch: "aarch64"
             distro: "fedora_latest"
+            packaging: "rpm"
     steps:
+      - uses: actions/checkout@v2
       - uses: uraimo/run-on-arch-action@v2.0.5
         with:
           arch: ${{ matrix.arch }}
           distro: ${{ matrix.distro }}
           githubToken: ${{ github.token }}
-          run: uname -a
+          env: |
+            ARCH=${{ matrix.arch }}
+            PACKAGING=${{ matrix.packaging }}
+          dockerRunArgs: |
+            --volume "${PWD}:/src" -w /src
+          run: ./verify.sh
