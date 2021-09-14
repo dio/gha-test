@@ -20,7 +20,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: "install .${{ matrix.packaging }} on ${{ matrix.image }}/${{ matrix.arch }}"
+      - name: "install .${{ matrix.packaging }} on ${{ matrix.image }} (${{ matrix.arch }})"
         run: |
           docker run -e ARCH=${{ matrix.arch }} \
             -e PACKAGING=${{ matrix.packaging }} \

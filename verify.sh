@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-PACKAGING=${PKG:-deb}
+PACKAGING=${PACKAGING:-deb}
 ARCH=${ARCH:-amd64}
 
 declare -A install=(["deb"]="dpkg -i" ["rpm"]="rpm -i")
