@@ -12,3 +12,6 @@ declare -A uninstall=(["deb"]="apt remove -yqq" ["rpm"]="rpm -e")
 ${install[${PACKAGING}]} ${FILE}
 func-e versions
 ${uninstall[${PACKAGING}]} func-e
+func-e versions && exit 1
+
+exit 0
