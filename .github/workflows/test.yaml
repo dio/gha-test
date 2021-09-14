@@ -54,7 +54,7 @@ jobs:
           - distro: "fedora_latest"
             arch: "aarch64"
             packaging: "rpm"
-          - distro: "ubuntu_latest"
+          - distro: "ubuntu20.04"
             arch: "aarch64"
             packaging: "deb"
             file: dist/func-e_dev_linux_arm64.deb
