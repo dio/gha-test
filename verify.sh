@@ -10,4 +10,4 @@ declare -A uninstall=(["deb"]="apt remove -yqq" ["rpm"]="rpm -e")
 
 ${install[${PACKAGING}]} func-e_dev_linux_${ARCH}.${PACKAGING}
 func-e versions
-${install[${PACKAGING}]} func-e_dev_linux_${ARCH}.${PACKAGING}
+${uninstall[${PACKAGING}]} func-e_dev_linux_${ARCH}.${PACKAGING}
