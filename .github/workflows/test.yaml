@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: docker://ghcr.io/tetratelabs/func-e-internal:centos8
         with:
-          run: uname -a
+          args: uname -a
       - name: "ok"
         run: uname -a
 
