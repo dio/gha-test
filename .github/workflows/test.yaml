@@ -29,4 +29,8 @@ jobs:
             distro: "fedora_latest"
     steps:
       - uses: uraimo/run-on-arch-action@v2.0.5
-      - run: uname -a
+        with:
+          arch: ${{ matrix.arch }}
+          distro: ${{ matrix.distro }}
+          githubToken: ${{ github.token }}
+          run: uname -a
