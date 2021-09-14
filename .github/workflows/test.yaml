@@ -15,7 +15,7 @@ jobs:
             arch: amd64
             packaging: deb
           - image: "ghcr.io/tetratelabs/func-e-internal:centos8"
-            arch: rpm
+            arch: x86_64
             packaging: rpm
 
     steps:

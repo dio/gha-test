@@ -2,12 +2,12 @@
 
 set -euo pipefail
 
-PKG=${PKG:-deb}
+PACKAGING=${PKG:-deb}
 ARCH=${ARCH:-amd64}
 
 declare -A install=(["deb"]="dpkg -i" ["rpm"]="rpm -i")
 declare -A uninstall=(["deb"]="apt remove -yqq" ["rpm"]="rpm -e")
 
-${install[${PKG}]} func-e_dev_linux_${ARCH}.${PKG}
+${install[${PACKAGING}]} func-e_dev_linux_${ARCH}.${PACKAGING}
 func-e versions
-${install[${PKG}]} func-e_dev_linux_${ARCH}.${PKG}
+${install[${PACKAGING}]} func-e_dev_linux_${ARCH}.${PACKAGING}
