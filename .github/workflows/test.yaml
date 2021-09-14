@@ -7,10 +7,17 @@ jobs:
   test:
     name: "test"
     runs-on: "ubuntu-latest"
-    steps:
-      - uses: docker://ghcr.io/tetratelabs/func-e-internal:centos8
-        with:
-          args: uname -a
-      - name: "ok"
-        run: uname -a
 
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - FROM: "ubuntu-latest"
+          - FROM: "arm64v8/fedora:latest"
+          - FROM: "ghcr.io/tetratelabs/func-e-internal:centos8"
+    steps:
+      - uses: actions/checkout@v2
+      - name: "ok"
+        env:
+          FROM: ${{ matrix.FROM }}
+        run: docker run --rm -it ${FROM} uname -a
