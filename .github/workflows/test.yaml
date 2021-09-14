@@ -55,8 +55,9 @@ jobs:
             arch: "aarch64"
             packaging: "rpm"
           - distro: "ubuntu_latest"
-            arch: "arm64"
+            arch: "aarch64"
             packaging: "deb"
+            file: dist/func-e_dev_linux_arm64.deb
 
     steps:
       - uses: actions/checkout@v2
