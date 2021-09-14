@@ -9,6 +9,7 @@ jobs:
     runs-on: "ubuntu-latest"
     steps:
       - uses: docker://ghcr.io/tetratelabs/func-e-internal:centos8
+        run: uname -a
       - name: "ok"
         run: uname -a
 
