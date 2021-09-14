@@ -16,8 +16,8 @@ jobs:
           - FROM: "arm64v8/fedora:latest"
           - FROM: "ghcr.io/tetratelabs/func-e-internal:centos8"
     steps:
-      - uses: actions/checkout@v2
-      - name: "ok"
-        env:
-          FROM: ${{ matrix.FROM }}
-        run: docker run --rm -it ${FROM} uname -a
+      - uses: addnab/docker-run-action@v3
+        with:
+          image: ${{ matrix.FROM }}
+          run: uname -a
+
