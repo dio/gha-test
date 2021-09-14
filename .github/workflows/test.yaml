@@ -56,7 +56,6 @@ jobs:
             packaging: "rpm"
           - distro: "ubuntu20.04"
             arch: "aarch64"
-            packaging: "deb"
             file: dist/func-e_dev_linux_arm64.deb
 
     steps:
@@ -74,6 +73,7 @@ jobs:
           env: |
             ARCH: ${{ matrix.arch }}
             PACKAGING: ${{ matrix.packaging }}
+            PKG_FILE: ${{ matrix.file }}
           dockerRunArgs: |
             --volume "${PWD}:/src" -w /src
           run: ./verify.sh

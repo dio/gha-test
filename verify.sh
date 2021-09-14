@@ -3,7 +3,7 @@
 set -euo pipefail
 
 PACKAGING=${PACKAGING:-deb}
-ARCH=${ARCH:-arm64}
+ARCH=${ARCH:-amd64}
 PKG_FILE=${PKG_FILE:-dist/func-e_dev_linux_${ARCH}.${PACKAGING}}
 
 declare -A install=(["deb"]="dpkg -i" ["rpm"]="rpm -i")
