@@ -12,12 +12,15 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - FROM: "ubuntu-latest"
-          - FROM: "arm64v8/fedora:latest"
-          - FROM: "ghcr.io/tetratelabs/func-e-internal:centos8"
+          - image: "ubuntu:latest"
+            platform: "linux/amd64"
+          - image: "ghcr.io/tetratelabs/func-e-internal:centos8"
+            platform: "linux/amd64"
+          - image: "arm64v8/fedora:latest"
+            platform: "linux/arm64"
     steps:
       - uses: addnab/docker-run-action@v3
         with:
-          image: ${{ matrix.FROM }}
+          image: ${{ matrix.image }}
+          options: -v ${{ github.workspace }} --platform ${{ matrix.platform }}
           run: uname -a
-
