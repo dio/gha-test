@@ -4,8 +4,7 @@ on:
   push:
 
 jobs:
-  test:
-    name: "test"
+  linux-amd64:
     runs-on: "ubuntu-latest"
 
     strategy:
@@ -16,7 +15,18 @@ jobs:
             platform: "linux/amd64"
           - image: "ghcr.io/tetratelabs/func-e-internal:centos8"
             platform: "linux/amd64"
-          - image: "arm64v8/fedora:latest"
-            platform: "linux/arm64"
     steps:
       - run: docker run ${{ matrix.image }} ls
+
+  linux-non-amd64:
+    runs-on: "ubuntu-latest"
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: "aarch64"
+            distro: "fedora_latest"
+    steps:
+      - uses: uraimo/run-on-arch-action@v2.0.5
+      - run: uname -a
