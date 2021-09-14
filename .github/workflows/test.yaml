@@ -4,7 +4,17 @@ on:
   push:
 
 jobs:
+  artifacts:
+    runs-on: "ubuntu-latest"
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/upload-artifact@v2
+        with:
+          name: dist
+          path: src
+
   linux-amd64:
+    needs: artifacts
     runs-on: "ubuntu-latest"
 
     strategy:
@@ -20,6 +30,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/download-artifact@v2
+        with:
+          name: dist
+          path: dist
       - name: "install .${{ matrix.packaging }} on ${{ matrix.image }} (${{ matrix.arch }})"
         run: |
           docker run -e ARCH=${{ matrix.arch }} \
@@ -30,6 +44,7 @@ jobs:
             ./verify.sh
 
   linux-non-amd64:
+    needs: artifacts
     runs-on: "ubuntu-latest"
 
     strategy:
@@ -39,8 +54,16 @@ jobs:
           - distro: "fedora_latest"
             arch: "aarch64"
             packaging: "rpm"
+          - distro: "ubuntu_latest"
+            arch: "arm64"
+            packaging: "deb"
+
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/download-artifact@v2
+        with:
+          name: dist
+          path: dist
       - name: "install .${{ matrix.packaging }} on ${{ matrix.distro }}/${{ matrix.arch }}"
         uses: uraimo/run-on-arch-action@v2.0.5
         with:
