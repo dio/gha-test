@@ -17,4 +17,4 @@ jobs:
         if: runner.os == 'Linux'
         uses: docker://ghcr.io/tetratelabs/func-e-internal:centos8
         with:
-          args: /bin/sh -c "ls -la"
+          args: /bin/sh -c "echo $PWD"
