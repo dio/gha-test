@@ -4,77 +4,17 @@ on:
   push:
 
 jobs:
-  artifacts:
-    runs-on: "ubuntu-latest"
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/upload-artifact@v2
-        with:
-          name: dist
-          path: src
-
-  linux-amd64:
-    needs: artifacts
-    runs-on: "ubuntu-latest"
-
+  test:
+    name: "Test packaging build (${{ matrix.os }})"
+    runs-on: ${{ matrix.os }}
     strategy:
-      fail-fast: false
+      fail-fast: false  # don't fail fast as sometimes failures are operating system specific
       matrix:
         include:
-          - image: "ubuntu:latest"
-            arch: amd64
-            packaging: deb
-          - image: "ghcr.io/tetratelabs/func-e-internal:centos8"
-            arch: x86_64
-            packaging: rpm
-
+          - os: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/download-artifact@v2
+      - name: "Test run in container"
+        if: runner.os == 'Linux'
+        uses: docker://ghcr.io/tetratelabs/func-e-internal:centos8
         with:
-          name: dist
-          path: dist
-      - name: "install .${{ matrix.packaging }} on ${{ matrix.image }} (${{ matrix.arch }})"
-        run: |
-          docker run -e ARCH=${{ matrix.arch }} \
-            -e PACKAGING=${{ matrix.packaging }} \
-            -v ${{ github.workspace }}:/src \
-            -w /src \
-            ${{ matrix.image }} \
-            ./verify.sh
-
-  linux-non-amd64:
-    needs: artifacts
-    runs-on: "ubuntu-latest"
-
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - distro: "fedora_latest"
-            arch: "aarch64"
-            packaging: "rpm"
-            file: dist/func-e_dev_linux_aarch64.rpm
-          - distro: "ubuntu20.04"
-            arch: "aarch64"
-            packaging: "deb"
-            file: dist/func-e_dev_linux_arm64.deb
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/download-artifact@v2
-        with:
-          name: dist
-          path: dist
-      - name: "install .${{ matrix.packaging }} on ${{ matrix.distro }}/${{ matrix.arch }}"
-        uses: uraimo/run-on-arch-action@v2.0.5
-        with:
-          arch: ${{ matrix.arch }}
-          distro: ${{ matrix.distro }}
-          githubToken: ${{ github.token }}
-          env: |
-            ARCH: ${{ matrix.arch }}
-            PACKAGING: ${{ matrix.packaging }}
-            FILE: ${{ matrix.file }}
-          dockerRunArgs: |
-            --volume "${PWD}:/src" -w /src
-          run: ./verify.sh
+          args: ls -la && uname -a
