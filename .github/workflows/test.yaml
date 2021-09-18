@@ -11,13 +11,19 @@ jobs:
       fail-fast: false  # don't fail fast as sometimes failures are operating system specific
       matrix:
         include:
+          # ubuntu is missing wixl https://github.com/actions/virtual-environments/issues/3857
           - os: ubuntu-latest
+
     steps:
       - name: "Checkout"
         uses: actions/checkout@v2
 
-      - name: "Test run in container"
+      - name: "Test installing Debian package (Ubuntu)"
+        if: runner.os == 'Linux'
+        run: packaging/nfpm/verify_deb.sh
+
+      - name: "Test installing RPM package (Centos 8 via ghcr.io/tetratelabs/func-e-internal:centos8)"
         if: runner.os == 'Linux'
         uses: docker://ghcr.io/tetratelabs/func-e-internal:centos8
         with:
-          args: ./test.sh
+          args: packaging/nfpm/verify_rpm.sh

@@ -2,16 +2,18 @@
 
 set -euo pipefail
 
-PACKAGING=${PACKAGING:-deb}
-ARCH=${ARCH:-amd64}
-FILE=${FILE:-dist/func-e_dev_linux_${ARCH}.${PACKAGING}}
+DEB_FILE=${DEB_FILE-"dist/func-e_dev_linux_amd64.deb"}
 
-declare -A install=(["deb"]="dpkg -i" ["rpm"]="rpm -i")
-declare -A uninstall=(["deb"]="apt remove -yqq" ["rpm"]="rpm -e")
+echo installing "${DEB_FILE}"
+dpkg -i "${DEB_FILE}" || exit 1
 
-${install[${PACKAGING}]} ${FILE}
-func-e versions
-${uninstall[${PACKAGING}]} func-e
-func-e versions && exit 1
+echo ensuring func-e was installed
+func-e -version || exit 1
+
+echo uninstalling func-e
+apt-get remove "${DEB_FILE}" || exit 1
+
+echo ensuring func-e was uninstalled
+func-e -version && exit 1
 
 exit 0
