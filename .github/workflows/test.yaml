@@ -13,8 +13,11 @@ jobs:
         include:
           - os: ubuntu-latest
     steps:
+      - name: "Checkout"
+        uses: actions/checkout@v2
+
       - name: "Test run in container"
         if: runner.os == 'Linux'
         uses: docker://ghcr.io/tetratelabs/func-e-internal:centos8
         with:
-          args: /bin/sh -c "`pwd`"
+          args: ./test.sh
