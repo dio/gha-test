@@ -17,4 +17,4 @@ jobs:
         if: runner.os == 'Linux'
         uses: docker://ghcr.io/tetratelabs/func-e-internal:centos8
         with:
-          args: ./test.sh
+          args: ${{ github.workspace }}/test.sh
