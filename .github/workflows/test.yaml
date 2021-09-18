@@ -17,4 +17,4 @@ jobs:
         if: runner.os == 'Linux'
         uses: docker://ghcr.io/tetratelabs/func-e-internal:centos8
         with:
-          args: /bin/sh -c "cat /etc/centos-release"
+          args: /bin/sh -c "ls -la"
