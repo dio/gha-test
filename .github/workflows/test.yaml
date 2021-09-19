@@ -27,11 +27,13 @@ jobs:
           cat > Dockerfile <<'EOF'
           ${{ matrix.dockerfile }}
           EOF
-      - uses: docker/build-push-action@v2
-        with:
-          platforms: linux/amd64,linux/arm64
-          push: true
-          tags: ${{ matrix.target-tag }}
+      - run: ls -la && pwd
+
+      # - uses: docker/build-push-action@v2
+      #   with:
+      #     platforms: linux/amd64,linux/arm64
+      #     push: true
+      #     tags: ${{ matrix.target-tag }}
 
   # test:
   #   name: "Test packaging build (${{ matrix.os }})"
