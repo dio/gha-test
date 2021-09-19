@@ -12,39 +12,32 @@ jobs:
               FROM centos:8
               RUN yum install -y --quiet make which git gcc && yum clean all
             target-tag: ghcr.io/dio/random-images/test:centos8
-            platform: amd64
-          - dockerfile: |
-              FROM centos:8
-              RUN yum install -y --quiet make which git gcc && yum clean all
-            target-tag: ghcr.io/dio/random-images/test:centos8
-            platform: arm64
           - dockerfile: |
               FROM ubuntu:latest
             target-tag: ghcr.io/dio/random-images/test:ubuntu-latest
-            platform: amd64
-          - dockerfile: |
-              FROM ubuntu:latest
-            target-tag: ghcr.io/dio/random-images/test:ubuntu-latest
-            platform: arm64
     runs-on: ubuntu-latest
     steps:
-      - uses: docker/setup-qemu-action@v1
-      - uses: docker/login-action@v1
-        with:
-          registry: ghcr.io
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-      - uses: docker/setup-buildx-action@v1
-      - run: |
-          cat > Dockerfile <<'EOF'
-          ${{ matrix.dockerfile }}
-          EOF
-      - uses: docker/build-push-action@v2
-        with:
-          context: .
-          platforms: linux/${{ matrix.platform }}
-          push: true
-          tags: ${{ matrix.target-tag }}-${{ matrix.platform }}
+      - id: set-matrix
+        run: echo ${{ toJSON(matrix) }}
+
+
+      # - uses: docker/setup-qemu-action@v1
+      # - uses: docker/login-action@v1
+      #   with:
+      #     registry: ghcr.io
+      #     username: ${{ secrets.DOCKER_USERNAME }}
+      #     password: ${{ secrets.DOCKER_PASSWORD }}
+      # - uses: docker/setup-buildx-action@v1
+      # - run: |
+      #     cat > Dockerfile <<'EOF'
+      #     ${{ matrix.dockerfile }}
+      #     EOF
+      # - uses: docker/build-push-action@v2
+      #   with:
+      #     context: .
+      #     platforms: linux/${{ matrix.platform }}
+      #     push: true
+      #     tags: ${{ matrix.target-tag }}-${{ matrix.platform }}
 
   # test:
   #   name: "Test packaging build (${{ matrix.os }})"
