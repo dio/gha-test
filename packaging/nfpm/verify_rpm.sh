@@ -25,7 +25,7 @@ echo ensuring func-e was installed
 func-e -version || exit 1
 
 echo uninstalling func-e
-rpm -e remove func-e || exit 1
+rpm -e func-e || exit 1
 
 echo ensuring func-e was uninstalled
 func-e -version && exit 1

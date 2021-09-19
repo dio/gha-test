@@ -27,5 +27,5 @@ jobs:
         if: runner.os == 'Linux'
         uses: docker://ghcr.io/tetratelabs/func-e-internal:centos8
         with:
-          # Since we are using a root user here, it does not require "sudo".
+          # Since we use the root user here, it does not require "sudo".
           args: packaging/nfpm/verify_rpm.sh
