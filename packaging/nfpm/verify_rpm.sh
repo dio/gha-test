@@ -16,7 +16,7 @@
 
 set -euo pipefail
 
-RPM_FILE=${RPM_FILE-"dist/func-e_dev_linux_x86_64.rpm"}
+RPM_FILE=${RPM_FILE-"dist/func-e_dev_linux_${1-"x86_64"}.rpm"}
 
 echo installing "${RPM_FILE}"
 rpm -i "${RPM_FILE}" || exit 1
