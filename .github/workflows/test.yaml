@@ -26,6 +26,6 @@ jobs:
 
       - name: "Test"
         if: runner.os == 'Linux'
-        run: sudo packaging/nfpm/verify.sh
+        run: sudo packaging/nfpm/verify_deb.sh
         env:
           DEB_FILE: dist/func-e_dev_linux_arm64.deb
