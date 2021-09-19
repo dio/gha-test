@@ -16,7 +16,7 @@
 
 set -euo pipefail
 
-DEB_FILE=${DEB_FILE-"dist/func-e_dev_linux_arm64.deb"}
+DEB_FILE=${DEB_FILE-"dist/func-e_dev_linux_amd64.deb"}
 
 echo installing "${DEB_FILE}"
 dpkg -i "${DEB_FILE}" || exit 1
