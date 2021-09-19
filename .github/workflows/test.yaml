@@ -20,10 +20,12 @@ jobs:
 
       - name: "Test installing Debian package (Ubuntu)"
         if: runner.os == 'Linux'
-        run: packaging/nfpm/verify_deb.sh
+        # Running dpkg and apt-get requires "sudo".
+        run: sudo packaging/nfpm/verify_deb.sh
 
       - name: "Test installing RPM package (Centos 8 via ghcr.io/tetratelabs/func-e-internal:centos8)"
         if: runner.os == 'Linux'
         uses: docker://ghcr.io/tetratelabs/func-e-internal:centos8
         with:
+          # Since we are using a root user here, it does not require "sudo".
           args: packaging/nfpm/verify_rpm.sh
