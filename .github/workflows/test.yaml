@@ -46,4 +46,4 @@ jobs:
         if: runner.os == 'Linux'
         uses: docker://arm64v8/centos
         with:
-          args: packaging/nfpm/verify_rpm.sha arch64
+          args: packaging/nfpm/verify_rpm.sh arch64
