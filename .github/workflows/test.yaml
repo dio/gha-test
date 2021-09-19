@@ -13,8 +13,8 @@ jobs:
               RUN yum install -y --quiet make which git gcc && yum clean all
             target-tag: ghcr.io/dio/random-images/test:centos8
           - dockerfile: |
-              FROM ubuntu:latest
-            target-tag: ghcr.io/dio/random-images/test:ubuntu-latest
+              FROM ubuntu:20.04
+            target-tag: ghcr.io/dio/random-images/test:ubuntu20.04
     runs-on: ubuntu-latest
     steps:
       - uses: docker/login-action@v1
@@ -33,11 +33,11 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64
           tags: ${{ matrix.target-tag }}
-      - uses: docker/metadata-action@v3
-        id: meta
+      - uses: docker/build-push-action@v2
         with:
-          images: ${{ matrix.target-tag }}
-      - run: echo ${{ steps.meta.outputs.tags }}
+          context: .
+          platforms: linux/arm64
+          tags: ${{ matrix.target-tag }}-arm64
 
   # test:
   #   name: "Test packaging build (${{ matrix.os }})"
