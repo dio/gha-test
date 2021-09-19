@@ -11,10 +11,10 @@ jobs:
           - dockerfile: |
               FROM centos:8
               RUN yum install -y --quiet make which git gcc && yum clean all
-            target_tag: centos8
+            target-tag: centos8
           - dockerfile: |
               FROM ubuntu:20.04
-            target_tag: ubuntu20.04
+            target-tag: ubuntu20.04
     runs-on: ubuntu-latest
     steps:
       - name: Login into GitHub Container Registry
