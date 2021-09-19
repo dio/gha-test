@@ -41,3 +41,9 @@ jobs:
         uses: docker://arm64v8/ubuntu
         with:
           args: packaging/nfpm/verify_deb.sh dist/func-e_dev_linux_arm64.deb
+
+      - name: "Test aarch"
+        if: runner.os == 'Linux'
+        uses: docker://arm64v8/centos
+        with:
+          args: packaging/nfpm/verify_rpm.sh dist/func-e_dev_linux_aarch64.rpm
