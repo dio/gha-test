@@ -4,89 +4,52 @@ on:
   push:
 
 jobs:
-  test:
+  build-and-push-images:
     strategy:
       matrix:
         include:
           - dockerfile: |
               FROM centos:8
               RUN yum install -y --quiet make which git gcc && yum clean all
-            target-tag: ghcr.io/dio/random-images/test:centos8
+            target_tag: centos8
           - dockerfile: |
               FROM ubuntu:20.04
-            target-tag: ghcr.io/dio/random-images/test:ubuntu20.04
+            target_tag: ubuntu20.04
     runs-on: ubuntu-latest
     steps:
-      - name: "Checkout"
-        uses: actions/checkout@v2
-      - uses: docker/login-action@v1
+      - name: Login into GitHub Container Registry
+        uses: docker/login-action@v1
         with:
           registry: ghcr.io
-          username: ${{ secrets.DOCKER_USERNAME }}
+          username: ${{ github.repository_owner }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-      - uses: docker/setup-qemu-action@v1
-      - uses: docker/setup-buildx-action@v1
-      - run: |
+
+      - name: Setup QEMU
+        uses: docker/setup-qemu-action@v1
+
+      - name: Setup Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Write Dockerfile for ${{ matrix.target-tag }}
+        run: |
           cat > Dockerfile <<'EOF'
           ${{ matrix.dockerfile }}
           EOF
-      - uses: docker/build-push-action@v2
+
+      - name : Build and push
+        uses: docker/build-push-action@v2
         with:
           context: .
-          platforms: linux/amd64,linux/arm64
-          tags: ${{ matrix.target-tag }}
-      - uses: docker/build-push-action@v2
+          platforms: linux/amd64,linux/arm64 # Build and push for multiple architectures.
+          tags:  ghcr.io/${{ github.repository_owner }}/random-images:${{ matrix.target-tag }}
+
+      # We do re-tagging for easier usage when using emulation. Using `uses: docker://` only allows
+      # to override `args`, but not the --platform flag (tried using `options` but no luck). Reference:
+      # https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#example-using-the-github-packages-container-registry.
+      # Related: https://github.com/actions/virtual-environments/issues/1368.
+      - name : Re-tag for arm64 only
+        uses: docker/build-push-action@v2
         with:
           context: .
-          platforms: linux/arm64
-          tags: ${{ matrix.target-tag }}-arm64
-      - name: "Test arm"
-        if: runner.os == 'Linux'
-        uses: docker://ubuntu
-        with:
-          options: --platform linux/arm64
-          args: packaging/nfpm/verify_deb.sh arm64
-
-  # test:
-  #   name: "Test packaging build (${{ matrix.os }})"
-  #   runs-on: ${{ matrix.os }}
-  #   strategy:
-  #     fail-fast: false  # don't fail fast as sometimes failures are operating system specific
-  #     matrix:
-  #       include:
-  #         # ubuntu is missing wixl https://github.com/actions/virtual-environments/issues/3857
-  #         - os: ubuntu-latest
-
-  #   steps:
-  #     - name: "Checkout"
-  #       uses: actions/checkout@v2
-
-  #     - name: "Test installing Debian package (Ubuntu)"
-  #       if: runner.os == 'Linux'
-  #       # Running dpkg and apt-get requires "sudo".
-  #       run: sudo packaging/nfpm/verify_deb.sh
-
-  #     - name: "Test installing RPM package (Centos 8 via ghcr.io/tetratelabs/func-e-internal:centos8)"
-  #       if: runner.os == 'Linux'
-  #       uses: docker://ghcr.io/tetratelabs/func-e-internal:centos8
-  #       with:
-  #         # Since we use the root user here, it does not require "sudo".
-  #         args: packaging/nfpm/verify_rpm.sh
-
-  #     - name: "Set up QEMU"
-  #       if: runner.os == 'Linux'
-  #       uses: docker/setup-qemu-action@v1
-  #       with:
-  #         platforms: arm64
-
-  #     - name: "Test arm"
-  #       if: runner.os == 'Linux'
-  #       uses: docker://arm64v8/ubuntu
-  #       with:
-  #         args: packaging/nfpm/verify_deb.sh arm64
-
-  #     - name: "Test aarch"
-  #       if: runner.os == 'Linux'
-  #       uses: docker://arm64v8/centos
-  #       with:
-  #         args: packaging/nfpm/verify_rpm.sh aarch64
+          platforms: linux/arm64 # Build and push for arm64 architecture only.
+          tags:  ghcr.io/${{ github.repository_owner }}/random-images:${{ matrix.target-tag }}-arm64
