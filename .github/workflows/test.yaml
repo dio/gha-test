@@ -17,6 +17,8 @@ jobs:
             target-tag: ghcr.io/dio/random-images/test:ubuntu20.04
     runs-on: ubuntu-latest
     steps:
+      - name: "Checkout"
+        uses: actions/checkout@v2
       - uses: docker/login-action@v1
         with:
           registry: ghcr.io
@@ -38,6 +40,12 @@ jobs:
           context: .
           platforms: linux/arm64
           tags: ${{ matrix.target-tag }}-arm64
+      - name: "Test arm"
+        if: runner.os == 'Linux'
+        uses: docker://ubuntu
+        with:
+          options: --platform linux/arm64
+          args: packaging/nfpm/verify_deb.sh arm64
 
   # test:
   #   name: "Test packaging build (${{ matrix.os }})"
