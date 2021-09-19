@@ -12,9 +12,20 @@ jobs:
               FROM centos:8
               RUN yum install -y --quiet make which git gcc && yum clean all
             target-tag: ghcr.io/dio/random-images/test:centos8
+            platform: amd64
+          - dockerfile: |
+              FROM centos:8
+              RUN yum install -y --quiet make which git gcc && yum clean all
+            target-tag: ghcr.io/dio/random-images/test:centos8
+            platform: arm64
           - dockerfile: |
               FROM ubuntu:latest
             target-tag: ghcr.io/dio/random-images/test:ubuntu-latest
+            platform: amd64
+          - dockerfile: |
+              FROM ubuntu:latest
+            target-tag: ghcr.io/dio/random-images/test:ubuntu-latest
+            platform: arm64
     runs-on: ubuntu-latest
     steps:
       - uses: docker/setup-qemu-action@v1
@@ -31,9 +42,9 @@ jobs:
       - uses: docker/build-push-action@v2
         with:
           context: .
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/${{ matrix.platform }}
           push: true
-          tags: ${{ matrix.target-tag }}
+          tags: ${{ matrix.target-tag }}-${{ matrix.platform }}
 
   # test:
   #   name: "Test packaging build (${{ matrix.os }})"
