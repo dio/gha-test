@@ -24,6 +24,7 @@ jobs:
           mkdir -p ui/applications/bridge
           touch ui/applications/bridge/existing
       - uses: actions/download-artifact@v3
-        name: applications
-        path: ui
+        with:
+          name: applications
+          path: ui
       - run: ls -laR
