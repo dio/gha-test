@@ -13,14 +13,17 @@ jobs:
           touch ui/applications/bridge/dist/ok
       - uses: actions/upload-artifact@v3
         with:
-          name: dist
+          name: applications
           path: ui/applications/**/dist/
   check:
     name: check
     needs: dist
     runs-on: ubuntu-latest
     steps:
+      - run: |
+          mkdir -p ui/applications/bridge
+          touch ui/applications/bridge/existing
       - uses: actions/download-artifact@v3
-        name: dist
-        path: .artifacts
+        name: applications
+        path: ui
       - run: ls -laR
