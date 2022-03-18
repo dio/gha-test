@@ -21,4 +21,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v3
+        name: dist
       - run: ls -laR
