@@ -5,16 +5,18 @@ on:
 
 jobs:
   dist:
+    name: dist
     runs-on: ubuntu-latest
     steps:
-      run: |
-        mkdir -p ui/applications/bridge/dist
-        touch ui/applications/bridge/dist/ok
+      - run: |
+          mkdir -p ui/applications/bridge/dist
+          touch ui/applications/bridge/dist/ok
       - uses: actions/upload-artifact@v3
         with:
           name: dist
           path: ui/applications/**/dist/
   check:
+    name: check
     needs: dist
     runs-on: ubuntu-latest
     steps:
